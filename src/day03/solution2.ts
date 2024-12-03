@@ -1,54 +1,27 @@
 export function solve(input: string): number {
-    // Regular expressions for finding instructions
-    const mulRegex = /mul\((\d{1,3}),(\d{1,3})\)/g;
-    const doRegex = /do\(\)/g;
-    const dontRegex = /don't\(\)/g;
+    // Compile regex patterns once
+    const instructionRegex = /(?:mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\))/g;
+    const mulNumbersRegex = /mul\((\d{1,3}),(\d{1,3})\)/;
 
     let sum = 0;
-    let enabled = true; // Multiplications are enabled by default
-    let lastIndex = 0;
+    let enabled = true;
 
-    // Process the input character by character to handle do/don't instructions
-    while (lastIndex < input.length) {
-        // Find the next instruction (either mul, do, or don't)
-        const doMatch = doRegex.exec(input);
-        const dontMatch = dontRegex.exec(input);
-        const mulMatch = mulRegex.exec(input);
+    // Match all instructions at once instead of searching repeatedly
+    const matches = input.match(instructionRegex) || [];
 
-        // Find the earliest match
-        const matches = [doMatch, dontMatch, mulMatch].filter(
-            (m) => m !== null
-        );
-        if (matches.length === 0) break;
-
-        const nextMatch = matches.reduce(
-            (earliest, current) =>
-                current.index < earliest.index ? current : earliest,
-            matches[0]
-        );
-
-        // Update lastIndex to continue search from after this match
-        lastIndex = nextMatch.index + nextMatch[0].length;
-
-        // Handle the instruction
-        if (nextMatch[0].startsWith('do(')) {
+    for (const instruction of matches) {
+        if (instruction === 'do()') {
             enabled = true;
-            doRegex.lastIndex = lastIndex;
-            dontRegex.lastIndex = lastIndex;
-            mulRegex.lastIndex = lastIndex;
-        } else if (nextMatch[0].startsWith('don')) {
+        } else if (instruction === "don't()") {
             enabled = false;
-            doRegex.lastIndex = lastIndex;
-            dontRegex.lastIndex = lastIndex;
-            mulRegex.lastIndex = lastIndex;
         } else if (enabled) {
             // It's a mul instruction and multiplications are enabled
-            const x = parseInt(nextMatch[1]);
-            const y = parseInt(nextMatch[2]);
-            sum += x * y;
-            doRegex.lastIndex = lastIndex;
-            dontRegex.lastIndex = lastIndex;
-            mulRegex.lastIndex = lastIndex;
+            const numbers = instruction.match(mulNumbersRegex);
+            if (numbers) {
+                const x = parseInt(numbers[1]);
+                const y = parseInt(numbers[2]);
+                sum += x * y;
+            }
         }
     }
 
