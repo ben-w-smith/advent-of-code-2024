@@ -6,7 +6,6 @@ function solution(input: string): number {
 
     // Convert numbers into blocks representation
     const blocks: number[] = [];
-    const currentPos = 0;
     let fileId = 0;
 
     for (let i = 0; i < numbers.length; i++) {

@@ -24,7 +24,7 @@ function findAntinodes(input: string): number {
     const antinodes = new Set<string>();
 
     // For each frequency group
-    for (const [_, antennas] of antennasByFreq) {
+    for (const [, antennas] of antennasByFreq) {
         // Skip if there's only one antenna of this frequency
         if (antennas.length < 2) continue;
 
