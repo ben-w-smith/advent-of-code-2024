@@ -34,10 +34,6 @@ function findAntinodes(input: string): number {
                 const [x1, y1] = antennas[i];
                 const [x2, y2] = antennas[j];
 
-                // Calculate direction vector
-                const dx = x2 - x1;
-                const dy = y2 - y1;
-
                 // Check every point in the grid
                 for (let x = 0; x < width; x++) {
                     for (let y = 0; y < height; y++) {
